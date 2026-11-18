@@ -33,7 +33,7 @@ export async function refreshAccessToken(refreshToken: string) {
     }),
   });
   if (!res.ok) {
-    throw new DriveError("Google access expired. Reconnect Drive.");
+    throw new DriveError("Google access expired. Use Reconnect Drive in the top bar.");
   }
   return ((await res.json()) as { access_token: string }).access_token;
 }
@@ -89,7 +89,16 @@ export async function upsertPostFile(
   existingFileId: string | null,
 ) {
   const content = JSON.stringify(
-    { ...post, text: `${post.caption}\n\n${post.hashtags.join(" ")}` },
+    {
+      id: post.id,
+      caption: post.caption,
+      hashtags: post.hashtags,
+      text: `${post.caption}\n\n${post.hashtags.join(" ")}`,
+      status: post.status,
+      scheduled_at: post.scheduled_at,
+      created_at: post.created_at,
+      updated_at: post.updated_at,
+    },
     null,
     2,
   );
@@ -119,6 +128,49 @@ export async function upsertPostFile(
       method: "POST",
       headers: { "Content-Type": m.contentType },
       body: m.body,
+    })
+  ).json()) as { id: string };
+  return created.id;
+}
+
+/** Creates or updates an image file in the app folder. Returns the Drive file id. */
+export async function upsertImageFile(
+  token: string,
+  name: string,
+  bytes: Buffer,
+  mimeType: string,
+  existingFileId: string | null,
+) {
+  const boundary = "spark" + Math.random().toString(36).slice(2);
+  const build = (metadata: object) =>
+    Buffer.concat([
+      Buffer.from(
+        `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n--${boundary}\r\nContent-Type: ${mimeType}\r\n\r\n`,
+      ),
+      bytes,
+      Buffer.from(`\r\n--${boundary}--`),
+    ]);
+  const contentType = `multipart/related; boundary=${boundary}`;
+
+  if (existingFileId) {
+    const res = await call(
+      token,
+      `${UPLOAD}/files/${existingFileId}?uploadType=multipart&fields=id`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": contentType },
+        body: new Uint8Array(build({ name, mimeType })),
+      },
+    );
+    if (res.status !== 404) return existingFileId;
+  }
+
+  const folderId = await ensureFolder(token);
+  const created = (await (
+    await call(token, `${UPLOAD}/files?uploadType=multipart&fields=id`, {
+      method: "POST",
+      headers: { "Content-Type": contentType },
+      body: new Uint8Array(build({ name, mimeType, parents: [folderId] })),
     })
   ).json()) as { id: string };
   return created.id;

@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, CloudCheck, LogOut } from "lucide-react";
+import { Bell, CloudCheck, LogOut, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -15,6 +15,7 @@ import {
 import { SettingsDialog } from "~/components/dashboard/settings-dialog";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { useToast } from "~/components/ui/toast";
 import { Wordmark } from "~/components/wordmark";
 import { createClient } from "~/lib/supabase/client";
 import { api } from "~/trpc/react";
@@ -25,6 +26,16 @@ export function Dashboard({ userId, email }: { userId: string; email: string }) 
   const [editing, setEditing] = useState<FeedPost | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const drive = api.drive.status.useQuery();
+  const toast = useToast();
+  const utils = api.useUtils();
+  const syncAll = api.drive.syncAll.useMutation({
+    onSuccess: (r) => {
+      void utils.post.list.invalidate();
+      if (r.error) toast.error(`Drive: ${r.error}`);
+      else toast.success(`Synced ${r.synced} of ${r.total} posts to Drive.`);
+    },
+    onError: (e) => toast.error(e.message),
+  });
 
   async function logout() {
     await createClient().auth.signOut();
@@ -39,9 +50,22 @@ export function Dashboard({ userId, email }: { userId: string; email: string }) 
           <Wordmark href="/dashboard" />
           <div className="flex flex-wrap items-center gap-2">
             {drive.data?.connected ? (
-              <Badge tone="blue">
-                <CloudCheck className="size-3" aria-hidden /> Drive connected
-              </Badge>
+              <>
+                <Badge tone="blue">
+                  <CloudCheck className="size-3" aria-hidden /> Drive connected
+                </Badge>
+                <Button
+                  variant="secondary"
+                  size="small"
+                  isLoading={syncAll.isPending}
+                  onClick={() => syncAll.mutate()}
+                >
+                  <RefreshCw className="size-3" aria-hidden /> Sync all
+                </Button>
+                <GoogleButton variant="tertiary" size="small">
+                  Reconnect Drive
+                </GoogleButton>
+              </>
             ) : drive.data ? (
               <GoogleButton variant="secondary" size="small">
                 Connect Google Drive

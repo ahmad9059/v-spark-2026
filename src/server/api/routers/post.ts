@@ -23,7 +23,7 @@ const scheduledAt = z
 const imagePath = z.string().max(300).nullable();
 
 const columns =
-  "id,user_id,prompt,caption,hashtags,status,scheduled_at,image_path,drive_file_id,reminder_sent_at,created_at,updated_at";
+  "id,user_id,prompt,caption,hashtags,status,scheduled_at,image_path,drive_file_id,drive_image_file_id,drive_image_path,reminder_sent_at,created_at,updated_at";
 
 export const postRouter = createTRPCRouter({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -128,15 +128,22 @@ export const postRouter = createTRPCRouter({
         .from("posts")
         .delete()
         .eq("id", input.id)
-        .select("drive_file_id,image_path")
-        .maybeSingle<{ drive_file_id: string | null; image_path: string | null }>();
+        .select("drive_file_id,drive_image_file_id,image_path")
+        .maybeSingle<{
+          drive_file_id: string | null;
+          drive_image_file_id: string | null;
+          image_path: string | null;
+        }>();
       if (error) throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
       if (!data) throw new TRPCError({ code: "NOT_FOUND", message: "Post not found." });
 
       if (data.image_path) {
         await ctx.supabase.storage.from("post-media").remove([data.image_path]);
       }
-      await removePostFromDrive(ctx.supabase, ctx.user.id, data.drive_file_id);
+      await removePostFromDrive(ctx.supabase, ctx.user.id, [
+        data.drive_file_id,
+        data.drive_image_file_id,
+      ]);
       return { ok: true };
     }),
 });

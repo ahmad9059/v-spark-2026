@@ -6,6 +6,7 @@ import {
   DriveError,
   deletePostFile,
   refreshAccessToken,
+  upsertImageFile,
   upsertPostFile,
   type DrivePost,
 } from "~/server/services/drive";
@@ -21,6 +22,8 @@ export type PostRow = DrivePost & {
   prompt: string;
   image_path: string | null;
   drive_file_id: string | null;
+  drive_image_file_id: string | null;
+  drive_image_path: string | null;
   reminder_sent_at: string | null;
 };
 
@@ -60,8 +63,46 @@ export async function syncPostToDrive(
   try {
     const token = await accessTokenFor(supabase, post.user_id);
     const fileId = await upsertPostFile(token, post, post.drive_file_id);
-    if (fileId !== post.drive_file_id) {
-      await supabase.from("posts").update({ drive_file_id: fileId }).eq("id", post.id);
+
+    let imageFileId = post.drive_image_file_id;
+    let imagePath = post.drive_image_path;
+    if (post.image_path) {
+      if (!imageFileId || imagePath !== post.image_path) {
+        const { data: blob, error } = await supabase.storage
+          .from("post-media")
+          .download(post.image_path);
+        if (error || !blob) {
+          throw new DriveError("Could not read the image to copy it to Drive.");
+        }
+        const ext = post.image_path.split(".").pop() ?? "png";
+        imageFileId = await upsertImageFile(
+          token,
+          `post-${post.id}.${ext}`,
+          Buffer.from(await blob.arrayBuffer()),
+          blob.type || `image/${ext === "jpg" ? "jpeg" : ext}`,
+          imageFileId,
+        );
+        imagePath = post.image_path;
+      }
+    } else if (imageFileId) {
+      await deletePostFile(token, imageFileId);
+      imageFileId = null;
+      imagePath = null;
+    }
+
+    if (
+      fileId !== post.drive_file_id ||
+      imageFileId !== post.drive_image_file_id ||
+      imagePath !== post.drive_image_path
+    ) {
+      await supabase
+        .from("posts")
+        .update({
+          drive_file_id: fileId,
+          drive_image_file_id: imageFileId,
+          drive_image_path: imagePath,
+        })
+        .eq("id", post.id);
     }
     return { driveSynced: true, driveError: null };
   } catch (e) {
@@ -75,12 +116,13 @@ export async function syncPostToDrive(
 export async function removePostFromDrive(
   supabase: SupabaseClient,
   userId: string,
-  fileId: string | null,
+  fileIds: Array<string | null>,
 ) {
-  if (!fileId) return;
+  const ids = fileIds.filter((id): id is string => Boolean(id));
+  if (ids.length === 0) return;
   try {
     const token = await accessTokenFor(supabase, userId);
-    await deletePostFile(token, fileId);
+    for (const id of ids) await deletePostFile(token, id);
   } catch {
     // The row is already gone. A stray Drive file is not worth failing the delete.
   }
