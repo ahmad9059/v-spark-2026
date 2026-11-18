@@ -58,3 +58,10 @@ export function FieldHint({
     </p>
   );
 }
+
+export const Select = forwardRef<
+  HTMLSelectElement,
+  React.SelectHTMLAttributes<HTMLSelectElement>
+>(function Select({ className, ...props }, ref) {
+  return <select ref={ref} className={cn(control, "h-10", className)} {...props} />;
+});
