@@ -1,7 +1,7 @@
 # Work log: Spark Scheduler (VSPARK 2026)
 
-Status as of 2026-11-18: **app is built and works locally. Not merged to `main` yet, so the live site still shows
-Under Construction.** Branch: `wip/build-app`.
+Status as of 2026-11-18: **deployed and green.** `wip/build-app` was fast-forward merged into `main`; production deploy
+is READY at https://v-spark-2026.vercel.app. Work on `main` from here (it auto-deploys).
 
 Read first: `docs/PLAN.md` (plan and requirement map), `docs/design.md` (design system, mandatory),
 `new-info.txt` (competition rules and marks). Brief: "1-Hour Challenge, Lightweight AI Social Media Content
@@ -31,11 +31,17 @@ the Supabase / Google Cloud / Gmail dashboards, or copy `.env` over by hand. Nev
 - `pnpm check` clean, `pnpm build` passes.
 - Screenshots in `docs/screenshots/` (landing, login, dashboard, captions, schedule dialog, feed, edit, settings, delete).
 
+## Verified on the live site
+
+- `/`, `/login`, `/signup` return 200; `/dashboard` redirects to `/login` when signed out; tRPC returns 401 when signed out.
+- Cron: 401 without secret, 200 with it (service role key works in production).
+- Signed in as the QA user on production, generated 3 Gemini captions.
+- Supabase Google provider is enabled; `/auth/v1/authorize?provider=google` redirects to Google with the `drive.file` scope.
+
 ## Not tested yet
 
-- **Google Drive sync and Google sign-in.** `GOOGLE_CLIENT_ID/SECRET` are set, but the Supabase Google provider
-  was OFF when last checked (`/auth/v1/settings` showed `google: false`). It must be enabled in the Supabase
-  dashboard, then test: sign in with Google, check a row appears in `google_tokens`, create a post, check the
+- **Google Drive sync and Google sign-in end to end.** The provider is on now, but a human must click through
+  Google's consent screen once (Google account must be a test user while the app is in Testing mode). Then test: sign in with Google, check a row appears in `google_tokens`, create a post, check the
   "Spark Scheduler" folder and `post-<id>.json` appear in Drive, edit and delete follow.
 - Sign-up with email (Supabase has "Confirm email" on and the built-in mailer allows about 2 emails/hour; turn it
   off in Authentication > Sign In / Providers > Email so judges can register).
@@ -83,12 +89,11 @@ the Supabase / Google Cloud / Gmail dashboards, or copy `.env` over by hand. Nev
 
 ## Remaining, in order
 
-1. Enable the Supabase Google provider, then run the Drive test above.
+1. Run the Drive test above (needs one Google consent click).
 2. Turn off "Confirm email" in Supabase, test sign-up.
-3. Merge `wip/build-app` into `main`, watch the Vercel build, test the live URL end to end.
-4. README (required): env var table, setup steps, architecture, technologies, API keys needed, deployment,
+3. README (required): env var table, setup steps, architecture, technologies, API keys needed, deployment,
    screenshots of each process, student name, registration number, GitHub URL, live URL, Drive location.
-5. Delete the QA test user. Confirm no secrets in git. Google Drive copy must equal GitHub.
+4. Delete the QA test user. Confirm no secrets in git. Google Drive copy must equal GitHub.
 
 ## Competition rules to keep in mind
 
