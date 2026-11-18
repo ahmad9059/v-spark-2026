@@ -122,7 +122,7 @@ export function Feed({ onEdit }: { onEdit: (p: FeedPost) => void }) {
         title="Delete this post?"
       >
         <p className="t-text-m text-gray-70">
-          It leaves your feed, your Drive folder and storage. You can't undo this.
+          It leaves your feed, your Drive folder and storage. You can&apos;t undo this.
         </p>
         <div className="mt-5 flex justify-end gap-2">
           <Button variant="secondary" onClick={() => setToDelete(null)}>

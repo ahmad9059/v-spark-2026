@@ -9,7 +9,7 @@ import { FieldHint, Input, Label, Select } from "~/components/ui/field";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Switch } from "~/components/ui/switch";
 import { useToast } from "~/components/ui/toast";
-import { api } from "~/trpc/react";
+import { api, type RouterOutputs } from "~/trpc/react";
 
 const LEAD_TIMES = [
   { value: 0, label: "At the scheduled time" },
@@ -58,7 +58,7 @@ function SettingsForm({ onClose }: { onClose: () => void }) {
   return <Loaded initial={query.data} save={save} test={test} onClose={onClose} />;
 }
 
-type Initial = NonNullable<ReturnType<typeof api.settings.get.useQuery>["data"]>;
+type Initial = RouterOutputs["settings"]["get"];
 
 function Loaded({
   initial,

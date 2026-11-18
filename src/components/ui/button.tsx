@@ -52,7 +52,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={type}
         disabled={disabled ?? isLoading}
-        aria-busy={isLoading || undefined}
+        aria-busy={isLoading ? true : undefined}
         className={cn(
           "inline-flex shrink-0 items-center justify-center gap-2 rounded-lg font-semibold whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-50",
           size === "medium" ? "h-8 text-[14px]" : "h-6 text-[12px]",

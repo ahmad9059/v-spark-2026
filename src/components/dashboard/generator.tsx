@@ -24,7 +24,7 @@ export function Generator({ onPick }: { onPick: (d: Draft) => void }) {
     <section aria-labelledby="gen-title">
       <p className="t-eyebrow-m">Step 1</p>
       <h2 id="gen-title" className="t-title-s mt-1">
-        What's the post about?
+        What&apos;s the post about?
       </h2>
 
       <form
