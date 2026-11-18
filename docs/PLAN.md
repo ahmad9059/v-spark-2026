@@ -51,7 +51,7 @@ plain, no "powerful/seamless/leverage"). We do not reuse the Amplitude logo; the
 1. Foundation: deps, env, design tokens, UI kit, Supabase clients, SQL migration
 2. Auth: signup/login/Google, callback (stores Drive tokens), middleware route protection
 3. Generator: Gemini route + UI
-4. Posts: CRUD, schedule dialog, Drive sync, image upload, Maps location
+4. Posts: CRUD, schedule dialog, Drive sync, image upload
 5. Notifications: settings UI, mailer, cron, test send
 6. Polish, README + screenshots, env on Vercel, deploy, verify
 
