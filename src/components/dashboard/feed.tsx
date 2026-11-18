@@ -1,9 +1,8 @@
 "use client";
 
-import { CalendarClock, CloudCheck, MapPin, Pencil, Trash2 } from "lucide-react";
+import { CalendarClock, CloudCheck, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 
-import { MapPreview } from "~/components/dashboard/location-picker";
 import { type FeedPost } from "~/components/dashboard/post-dialog";
 import { Alert } from "~/components/ui/alert";
 import { Badge } from "~/components/ui/badge";
@@ -88,14 +87,6 @@ export function Feed({ onEdit }: { onEdit: (p: FeedPost) => void }) {
                 <p className="t-text-m mt-3 whitespace-pre-wrap text-black">{p.caption}</p>
                 {p.hashtags.length ? (
                   <p className="t-text-s mt-2 text-blue">{p.hashtags.join(" ")}</p>
-                ) : null}
-                {p.location ? (
-                  <div className="mt-3 space-y-2">
-                    <p className="t-text-xs flex items-center gap-1 text-gray-60">
-                      <MapPin className="size-3.5" aria-hidden /> {p.location.name}
-                    </p>
-                    <MapPreview place={p.location} />
-                  </div>
                 ) : null}
                 <div className="mt-4 flex justify-end gap-2">
                   <Button variant="secondary" size="small" onClick={() => onEdit(p)}>

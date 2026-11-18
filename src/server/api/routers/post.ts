@@ -10,15 +10,6 @@ import {
   type PostRow,
 } from "~/server/services/sync";
 
-const location = z
-  .object({
-    name: z.string().max(200),
-    address: z.string().max(400).optional(),
-    lat: z.number().min(-90).max(90),
-    lng: z.number().min(-180).max(180),
-  })
-  .nullable();
-
 const caption = z.string().trim().min(1, "Caption can't be empty.").max(2200);
 const hashtags = z.array(z.string().max(40)).max(15);
 const scheduledAt = z
@@ -32,7 +23,7 @@ const scheduledAt = z
 const imagePath = z.string().max(300).nullable();
 
 const columns =
-  "id,user_id,prompt,caption,hashtags,status,scheduled_at,image_path,location,drive_file_id,reminder_sent_at,created_at,updated_at";
+  "id,user_id,prompt,caption,hashtags,status,scheduled_at,image_path,drive_file_id,reminder_sent_at,created_at,updated_at";
 
 export const postRouter = createTRPCRouter({
   list: protectedProcedure.query(async ({ ctx }) => {
@@ -55,7 +46,6 @@ export const postRouter = createTRPCRouter({
     }
     return data.map((p) => ({
       ...p,
-      location: p.location as z.infer<typeof location>,
       imageUrl: p.image_path ? (urls.get(p.image_path) ?? null) : null,
     }));
   }),
@@ -68,7 +58,6 @@ export const postRouter = createTRPCRouter({
         hashtags,
         scheduledAt,
         imagePath,
-        location,
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -82,7 +71,6 @@ export const postRouter = createTRPCRouter({
           status: input.scheduledAt ? "scheduled" : "draft",
           scheduled_at: input.scheduledAt,
           image_path: input.imagePath,
-          location: input.location,
         })
         .select(columns)
         .single<PostRow>();
@@ -93,10 +81,7 @@ export const postRouter = createTRPCRouter({
       let emailError: string | null = null;
       if (input.scheduledAt) {
         const settings = await getSettings(ctx.supabase, ctx.user.id, ctx.user.email ?? "");
-        emailError = await notifyScheduled(settings, {
-          ...data,
-          location: input.location,
-        });
+        emailError = await notifyScheduled(settings, data);
       }
       return { id: data.id, ...sync, emailError };
     }),
@@ -108,7 +93,6 @@ export const postRouter = createTRPCRouter({
         caption: caption.optional(),
         hashtags: hashtags.optional(),
         scheduledAt: scheduledAt.optional(),
-        location: location.optional(),
         imagePath: imagePath.optional(),
       }),
     )
@@ -116,7 +100,6 @@ export const postRouter = createTRPCRouter({
       const patch: Record<string, unknown> = {};
       if (input.caption !== undefined) patch.caption = input.caption;
       if (input.hashtags !== undefined) patch.hashtags = input.hashtags;
-      if (input.location !== undefined) patch.location = input.location;
       if (input.imagePath !== undefined) patch.image_path = input.imagePath;
       if (input.scheduledAt !== undefined) {
         patch.scheduled_at = input.scheduledAt;

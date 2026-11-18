@@ -12,7 +12,6 @@ export type DrivePost = {
   hashtags: string[];
   status: string;
   scheduled_at: string | null;
-  location: unknown;
   created_at: string;
   updated_at: string;
 };

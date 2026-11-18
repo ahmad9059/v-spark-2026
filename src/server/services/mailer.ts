@@ -8,7 +8,6 @@ export type MailPost = {
   caption: string;
   hashtags: string[];
   scheduled_at: string | null;
-  location: { name?: string; address?: string } | null;
 };
 
 export type MailSettings = {
@@ -43,9 +42,6 @@ export async function sendPostEmail(opts: {
       : kind === "reminder"
         ? "A post is due soon."
         : "This is a test email from your notification settings.";
-  const place = post.location?.name
-    ? `<p style="margin:0 0 8px;color:#697077">Location: ${esc(post.location.name)}</p>`
-    : "";
   const caption = settings.include_caption
     ? `<p style="margin:16px 0;padding:16px;background:#F2F4F8;border-radius:8px;white-space:pre-wrap">${esc(post.caption)}<br><br><span style="color:#0052F2">${esc(post.hashtags.join(" "))}</span></p>`
     : "";
@@ -54,7 +50,7 @@ export async function sendPostEmail(opts: {
 <p style="margin:0 0 4px;font-size:12px;font-weight:600;letter-spacing:.05em;color:#0052F2;text-transform:uppercase">Spark Scheduler</p>
 <h1 style="margin:0 0 12px;font-size:22px">${esc(settings.subject)}</h1>
 <p style="margin:0 0 8px">${intro}</p>
-<p style="margin:0 0 8px;color:#697077">Scheduled for: ${esc(when)}</p>${place}${caption}
+<p style="margin:0 0 8px;color:#697077">Scheduled for: ${esc(when)}</p>${caption}
 </div>`;
 
   const transport = nodemailer.createTransport({

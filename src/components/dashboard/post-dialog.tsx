@@ -3,7 +3,6 @@
 import { ImagePlus, X } from "lucide-react";
 import { useState } from "react";
 
-import { LocationPicker, type Place } from "~/components/dashboard/location-picker";
 import { Alert } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import { Dialog } from "~/components/ui/dialog";
@@ -52,7 +51,6 @@ function PostForm({
   const [caption, setCaption] = useState(post?.caption ?? draft?.caption ?? "");
   const [tags, setTags] = useState((post?.hashtags ?? draft?.hashtags ?? []).join(" "));
   const [when, setWhen] = useState(toLocalInput(post?.scheduled_at ?? null));
-  const [place, setPlace] = useState<Place | null>(post?.location ?? null);
   const [imagePath, setImagePath] = useState<string | null>(post?.image_path ?? null);
   const [preview, setPreview] = useState<string | null>(post?.imageUrl ?? null);
   const [uploading, setUploading] = useState(false);
@@ -119,7 +117,6 @@ function PostForm({
         caption,
         hashtags,
         ...(unchangedTime ? {} : { scheduledAt }),
-        location: place,
         imagePath,
       });
       return;
@@ -130,7 +127,6 @@ function PostForm({
       hashtags,
       scheduledAt,
       imagePath,
-      location: place,
     });
   }
 
@@ -210,11 +206,6 @@ function PostForm({
             />
           </label>
         )}
-      </div>
-
-      <div>
-        <Label>Location</Label>
-        <LocationPicker value={place} onChange={setPlace} />
       </div>
 
       <div className="flex justify-end gap-2 pt-2">

@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
           await sendPostEmail({
             settings: s,
             kind: "reminder",
-            post: { ...post, location: post.location as never },
+            post,
           });
           await supabase
             .from("posts")

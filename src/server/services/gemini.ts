@@ -75,7 +75,7 @@ export async function generateCaptions(input: GenerateInput): Promise<Caption[]>
             },
           },
         }),
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(45_000),
       },
     );
   } catch {

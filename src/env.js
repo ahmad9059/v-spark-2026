@@ -6,12 +6,10 @@ export const env = createEnv({
     NODE_ENV: z.enum(["development", "test", "production"]),
 
     GEMINI_API_KEY: z.string().optional(),
-    GEMINI_MODEL: z.string().default("gemini-3.8-flash"),
+    GEMINI_MODEL: z.string().default("gemini-3.5-flash-lite"),
 
     GOOGLE_CLIENT_ID: z.string().optional(),
     GOOGLE_CLIENT_SECRET: z.string().optional(),
-
-    GOOGLE_MAPS_API_KEY: z.string().optional(),
 
     SMTP_HOST: z.string().default("smtp.gmail.com"),
     SMTP_PORT: z.coerce.number().default(465),
@@ -26,7 +24,6 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
-    NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY: z.string().optional(),
   },
 
   runtimeEnv: {
@@ -35,7 +32,6 @@ export const env = createEnv({
     GEMINI_MODEL: process.env.GEMINI_MODEL,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-    GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
     SMTP_HOST: process.env.SMTP_HOST,
     SMTP_PORT: process.env.SMTP_PORT,
     SMTP_USER: process.env.SMTP_USER,
@@ -46,8 +42,6 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-    NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY:
-      process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,

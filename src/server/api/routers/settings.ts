@@ -57,7 +57,6 @@ export const settingsRouter = createTRPCRouter({
           caption: "Coffee is ready. Come say hi.",
           hashtags: ["#coffee", "#morning"],
           scheduled_at: new Date(Date.now() + 3_600_000).toISOString(),
-          location: null,
         },
       });
     } catch (e) {

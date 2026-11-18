@@ -19,7 +19,7 @@ Email notifications go out per scheduled post, and the user controls how.
 | Auth (15)                                     | Supabase Auth: email/password + Google. Protected `/dashboard`, logout          |
 | Database CRUD (20)                            | Supabase Postgres, tables `posts`, `notification_settings`, `google_tokens`     |
 | Cloud storage (10)                            | Supabase Storage bucket `post-media` (private, signed URLs) for post images     |
-| External API (15)                             | Gemini (captions) + Google Maps/Places (tag a location, map preview), errors handled |
+| External API (15)                             | Gemini (captions), with error handling and clear messages. Google Maps was dropped by the user |
 | Deployment (15)                               | Vercel (project already linked to GitHub `main`)                                |
 | UI/UX + responsive (10)                       | Amplitude design system tokens, mobile first                                    |
 | Code quality (5)                              | zod validation on every input, typed tRPC, error toasts                         |
@@ -42,7 +42,7 @@ plain, no "powerful/seamless/leverage"). We do not reuse the Amplitude logo; the
 ## Data model
 
 - `posts`: id, user_id, prompt, caption, hashtags[], status (`draft|scheduled|sent`), scheduled_at,
-  image_path, location jsonb, drive_file_id, reminder_sent_at, timestamps
+  image_path, drive_file_id, reminder_sent_at, timestamps
 - `notification_settings`: user_id, enabled, email, notify_on_schedule, remind_minutes_before, subject, include_caption
 - `google_tokens`: user_id, refresh_token (service-role only, no client policy)
 
@@ -58,4 +58,4 @@ plain, no "powerful/seamless/leverage"). We do not reuse the Amplitude logo; the
 ## What we need from the user (cannot be created by the agent)
 
 Supabase project (URL, anon key, service role key), Google Cloud OAuth client (Drive API enabled, same client in
-Supabase Google provider), Gemini API key, Maps API key, SMTP credentials (Gmail app password works).
+Supabase Google provider), Gemini API key, SMTP credentials (Gmail app password works).

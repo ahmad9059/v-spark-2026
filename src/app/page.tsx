@@ -12,7 +12,7 @@ const features = [
   {
     icon: CalendarClock,
     title: "Schedule in seconds",
-    body: "Choose a time, add a photo and a location. Edit or delete it any time.",
+    body: "Choose a time, add a photo. Edit or delete it any time.",
   },
   {
     icon: HardDrive,
