@@ -1,0 +1,83 @@
+Web Development Competition
+Rules, Marks and Submission
+1. Overview
+Build a working web application and submit it with your source code and a live link. Please read all
+rules carefully before you start.
+Total marks: 100 | Time allowed: 120 minutes (2 hours)
+2. Rules and Regulations
+2.1 Participation and Time
+No. Rule Details
+1 Duration You have exactly 120 minutes to complete the task.
+2 Group Work Each Group have maxmum 2 members with thier on Laptops.
+3 Deadline Submissions and the live URL must be sent before the deadline.
+2.2 Technology and Tools
+No. Rule Details
+4 Technologies MERN Stack, React, Next.js, Django, and other approved web
+technologies are allowed.
+5 AI Tools You may use ChatGPT, Gemini, Claude, Cursor, and similar tools.
+2.3 Technical Requirements
+No. Rule Details
+6 Task Features Build all features given in the official task statement.
+7 Authentication Use Firebase Authentication (or an approved alternative).
+8 Database Use a real database to store your data.
+9 Cloud Storage Use Supabase Storage (or an approved alternative) for file uploads.
+10 External API Use at least one external API and show that it really works.
+11 Deployment Deploy the app and give a public URL. Vercel is preferred. Render
+or railway for Djnago.
+2.4 Submission
+No. Rule Details
+12 GitHub Submit your GitHub repository URL with the complete source
+code.
+13 Google Drive Upload the complete project folder without ZIP to the Drive folder
+given by the organizers.
+No. Rule Details
+14 README Include setup steps, technologies, integrations, and deployment
+details. Note: Screen shots of each proces must includes in read
+me.
+15 Student Details Give your name, registration number, GitHub URL, live URL, and
+Drive location.
+16 Same Code GitHub and Google Drive must contain the same complete project.
+2.5 Security and Honesty
+No. Rule Details
+17 No Secrets Do not upload .env files with real keys, passwords, or private
+credentials.
+18 Live Checking Judges may test login, database, file upload, API, and deployment.
+19 Integrity Do not copy others or fake features. AI code is allowed, but you
+must understand it.
+20 Final Marking Marks are given by the criteria below and by verified features.
+3. Marks Distribution
+No. Criterion What is Checked Marks
+1 UI/UX and
+Responsiveness
+Clean layout, easy navigation, works on mobile. 10
+2 Authentication Register, login, logout, protected routes. 15
+3 Database and CRUD Data is saved; Create, Read, Update, Delete work. 20
+4 Cloud Storage File upload and retrieval work securely. 10
+5 External API Real API calls, data is used well, errors are handled.Google
+MAPs APi
+15
+6 Deployment Public URL works and the app runs end to end. 15
+7 Code Quality Organized code, validation, error handling. 5
+8 Documentation README, setup steps, complete GitHub and Drive
+submission.
+5
+9 Live Demo You can demo the app and explain how it works. 5
+Total 100
+4. How Your Work Is Checked
+• GitHub and Google Drive code review.
+• Live testing of the public URL.
+• Testing login, database, storage, and API for real.
+• Security check (no exposed secrets, safe inputs).
+• Short live demo with questions from judges.
+5. Participant Checklist
+• Registration, login, logout, and protected routes work.
+• Database is connected and full CRUD works.
+• File upload and retrieval work.
+• At least one external API works, with error handling.
+• App is deployed and the public URL works.
+• GitHub repository has the complete code.
+• Full project folder is uploaded to Google Drive.
+• README is complete and includes environment variable names.
+• No real secrets or .env files uploaded.
+• Name, registration number, and all links are ready.
+• Everything is submitted before the deadline

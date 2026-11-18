@@ -1,6 +1,94 @@
 @import "tailwindcss";
 
+/*
+ * Amplitude design tokens (docs/design.md).
+ * Gellix is licensed, so we use the documented Google substitute, Poppins.
+ */
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-gellix: var(--font-poppins), Helvetica, ui-sans-serif, system-ui,
+    sans-serif;
+  --font-sans: var(--font-poppins), Helvetica, ui-sans-serif, system-ui,
+    sans-serif;
+
+  --color-blue: #0052f2;
+  --color-blue-on-dark: #4083ff;
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  --color-dark-blue: #001a4f;
+  --color-lilac: #6980ff;
+  --color-violet: #a373ff;
+  --color-pink: #ff7d78;
+  --color-red: #f23845;
+
+  --color-gray-100: #13171a;
+  --color-gray-90: #242a2e;
+  --color-gray-80: #373d42;
+  --color-gray-70: #50565b;
+  --color-gray-60: #697077;
+  --color-gray-50: #868d95;
+  --color-gray-40: #9fa5ad;
+  --color-gray-30: #b9bfc7;
+  --color-gray-20: #d5d9e0;
+  --color-gray-10: #f2f4f8;
+
+  --color-ink: #1e2024;
+  --color-stroke: #dedde2;
+
+  --radius-lg: 0.5rem;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-white font-gellix text-[16px] leading-[22px] text-black;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .t-title-xxl {
+    @apply text-[40px] leading-[44px] font-bold sm:text-[64px] sm:leading-[70px];
+  }
+  .t-title-xl {
+    @apply text-[36px] leading-[40px] font-semibold sm:text-[56px] sm:leading-[62px];
+  }
+  .t-title-l {
+    @apply text-[32px] leading-[38px] font-semibold sm:text-[44px] sm:leading-[48px];
+  }
+  .t-title-m {
+    @apply text-[28px] leading-[32px] font-semibold sm:text-[36px] sm:leading-[40px];
+  }
+  .t-title-s {
+    @apply text-[24px] leading-[28px] font-semibold sm:text-[28px] sm:leading-[31px];
+  }
+  .t-title-xs {
+    @apply text-[22px] leading-[24px] font-medium;
+  }
+  .t-eyebrow-m {
+    @apply text-[14px] font-semibold tracking-wide text-blue uppercase;
+  }
+  .t-eyebrow-s {
+    @apply text-[12px] font-semibold tracking-wide uppercase;
+  }
+  .t-text-xl {
+    @apply text-[20px] leading-[27px];
+  }
+  .t-text-l {
+    @apply text-[18px] leading-[24px];
+  }
+  .t-text-m {
+    @apply text-[16px] leading-[22px];
+  }
+  .t-text-s {
+    @apply text-[14px] leading-[19px] font-medium;
+  }
+  .t-text-xs {
+    @apply text-[12px] leading-[16px] font-medium;
+  }
 }
