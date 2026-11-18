@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { z } from "zod";
 
 import { GoogleButton } from "~/components/auth/google-button";
 import { Alert } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import { FieldHint, Input, Label } from "~/components/ui/field";
+import { DEMO_EMAIL, DEMO_PASSWORD } from "~/lib/demo";
 import { createClient } from "~/lib/supabase/client";
 
 const schema = z.object({
@@ -25,6 +26,15 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const [formError, setFormError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  function fillDemo() {
+    if (emailRef.current) emailRef.current.value = DEMO_EMAIL;
+    if (passwordRef.current) passwordRef.current.value = DEMO_PASSWORD;
+    setErrors({});
+    setFormError(null);
+  }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -106,6 +116,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           <Input
             id="email"
             name="email"
+            ref={emailRef}
             type="email"
             autoComplete="email"
             placeholder="you@example.com"
@@ -118,6 +129,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           <Input
             id="password"
             name="password"
+            ref={passwordRef}
             type="password"
             autoComplete={isLogin ? "current-password" : "new-password"}
             placeholder="At least 8 characters"
@@ -128,6 +140,16 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         <Button type="submit" isLoading={loading} className="w-full">
           {isLogin ? "Sign in" : "Create account"}
         </Button>
+        {isLogin ? (
+          <Button
+            variant="tertiary"
+            className="w-full"
+            onClick={fillDemo}
+            title={`Fills ${DEMO_EMAIL}`}
+          >
+            Fill demo account
+          </Button>
+        ) : null}
       </form>
 
       <p className="t-text-s mt-6 text-gray-60">
